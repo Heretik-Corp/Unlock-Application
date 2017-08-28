@@ -59,7 +59,7 @@ namespace UnlockApplication.Agent
             {
                 var a = new UnlockApplication();
                 a.RDO = artifact.Artifact;
-                var app = _client.Repositories.RelativityApplication.ReadSingle(Guid.Parse(a.AppGuid));
+                var app = _client.Repositories.RelativityApplication.ReadSingle(Guid.Parse(a.ApplicationGuid));
                 if (app.Locked.GetValueOrDefault(true))
                 {
                     var dbContext = _helper.GetDBContext(workspaceId);
