@@ -20,7 +20,7 @@ namespace UnlockApplication.Agent.Repositories
 
         public IEnumerable<int> GetWorkspaceIds()
         {
-            using (var client = _helper.GetServicesManager().CreateProxy<IRSAPIClient>(ExecutionIdentity.System))
+            using (var client = _helper.GetClientForWorkspace(-1))
             {
                 var queryResult = client.Repositories.Workspace.Query(new Query<Workspace>
                 {

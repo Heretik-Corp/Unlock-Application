@@ -34,7 +34,7 @@ namespace UnlockApplication.Agent
             }
         }
 
-        private void UnlockApplicationsInWorkspace(int workspaceId)
+        protected virtual void UnlockApplicationsInWorkspace(int workspaceId)
         {
             var applications = _appRepo.GetApplicationsToUnlock(workspaceId);
             foreach (var artifact in applications)

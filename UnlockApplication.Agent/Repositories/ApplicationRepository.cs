@@ -19,7 +19,7 @@ namespace UnlockApplication.Agent.Repositories
         }
         public bool DoesWorkspaceHaveApplication(int workspaceId, Guid applicationGuid)
         {
-            using (var client = _helper.GetServicesManager().CreateProxy<IRSAPIClient>(ExecutionIdentity.System))
+            using (var client = _helper.GetClientForWorkspace(workspaceId))
             {
                 client.APIOptions.WorkspaceID = workspaceId;
                 try
@@ -35,9 +35,8 @@ namespace UnlockApplication.Agent.Repositories
         }
         public IEnumerable<UnlockApplication> GetApplicationsToUnlock(int workspaceId)
         {
-            using (var client = _helper.GetServicesManager().CreateProxy<IRSAPIClient>(ExecutionIdentity.System))
+            using (var client = _helper.GetClientForWorkspace(workspaceId))
             {
-                client.APIOptions.WorkspaceID = workspaceId;
                 var result = client.Repositories.RDO.Query(new Query<RDO>
                 {
                     ArtifactTypeGuid = Guid.Parse(ObjectTypeGuids.UnlockApplication),
@@ -57,13 +56,9 @@ namespace UnlockApplication.Agent.Repositories
 
         public void UnlockApplication(int workspaceId, UnlockApplication application)
         {
-            using (var client = _helper.GetServicesManager().CreateProxy<IRSAPIClient>(ExecutionIdentity.System))
-            {
-                client.APIOptions.WorkspaceID = workspaceId;
-                var dbContext = _helper.GetDBContext(workspaceId);
-                //can't use the RSAPI to update locked app, who knew
-                dbContext.ExecuteNonQuerySQLStatement($"Update [RelativityApplication] set locked = 0 where ArtifactId = {application.ArtifactID}");
-            }
+            var dbContext = _helper.GetDBContext(workspaceId);
+            //can't use the RSAPI to update locked app, who knew
+            dbContext.ExecuteNonQuerySQLStatement($"Update [RelativityApplication] set locked = 0 where ArtifactId = {application.ArtifactID}");
         }
     }
 }

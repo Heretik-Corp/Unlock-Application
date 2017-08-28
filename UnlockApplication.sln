@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockApplication.Agent", "UnlockApplication.Agent\UnlockApplication.Agent.csproj", "{FD41A8D9-BDE4-4F98-ADF8-1102F95F1403}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockApplication.Runner", "UnlockApplication.Runner\UnlockApplication.Runner.csproj", "{4616FBCF-52C4-4CBD-906B-0F639FB452BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockApplication.Tests", "UnlockApplication.Tests\UnlockApplication.Tests.csproj", "{D0E07DF3-8C8F-4295-B083-6FC3EEA5DDC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4616FBCF-52C4-4CBD-906B-0F639FB452BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4616FBCF-52C4-4CBD-906B-0F639FB452BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4616FBCF-52C4-4CBD-906B-0F639FB452BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E07DF3-8C8F-4295-B083-6FC3EEA5DDC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E07DF3-8C8F-4295-B083-6FC3EEA5DDC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E07DF3-8C8F-4295-B083-6FC3EEA5DDC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E07DF3-8C8F-4295-B083-6FC3EEA5DDC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

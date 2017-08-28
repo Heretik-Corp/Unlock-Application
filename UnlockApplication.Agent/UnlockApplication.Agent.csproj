@@ -68,7 +68,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ObjectTypesDefs.tt</DependentUpon>
     </Compile>
-    <Compile Include="GetWorkspaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ApplicationRepository.cs" />
     <Compile Include="Repositories\IApplicationRepository.cs" />
