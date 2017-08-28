@@ -1,11 +1,5 @@
 ﻿using kCura.Agent;
-using kCura.Relativity.Client;
-using kCura.Relativity.Client.DTOs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnlockApplication.Agent.Repositories;
 
 namespace UnlockApplication.Agent
