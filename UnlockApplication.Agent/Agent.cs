@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnlockApplication.Agent.Repositories;
 
 namespace UnlockApplication.Agent
 {
@@ -19,8 +20,7 @@ namespace UnlockApplication.Agent
         {
             try
             {
-                var rsapiService = this.Helper.GetServicesManager().CreateProxy<IRSAPIClient>(Relativity.API.ExecutionIdentity.System);
-                var workspaceHelper = new UnlockApplicationService(rsapiService, this.Helper);
+                var workspaceHelper = new UnlockApplicationService(new WorkspaceRepository(this.Helper), new ApplicationRepository(this.Helper));
                 workspaceHelper.UnlockApplicationsInEnvironment();
             }
             catch (Exception e)

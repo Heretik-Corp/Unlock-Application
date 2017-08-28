@@ -6,80 +6,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnlockApplication.Agent.Repositories;
 
 namespace UnlockApplication.Agent
 {
     public class UnlockApplicationService
     {
-        private readonly IRSAPIClient _client;
-        private readonly IHelper _helper;
+        private readonly IWorkspaceRepository _workspaceRepo;
+        private readonly IApplicationRepository _appRepo;
 
-        public UnlockApplicationService(IRSAPIClient client, IHelper helper)
+        public UnlockApplicationService(IWorkspaceRepository workspaceRepo, IApplicationRepository appRepo)
         {
-            _client = client;
-            _helper = helper;
+            _workspaceRepo = workspaceRepo;
+            _appRepo = appRepo;
         }
         public void UnlockApplicationsInEnvironment()
         {
-
             var artifactGuid = Guid.Parse(Application.Guid);
-            var workspaces = GetWorkspaceIds();
+            var workspaces = _workspaceRepo.GetWorkspaceIds();
             foreach (var workspaceId in workspaces)
             {
-                _client.APIOptions.WorkspaceID = workspaceId;
-                try
+                var check = _appRepo.DoesWorkspaceHaveApplication(workspaceId, artifactGuid);
+                if (check)
                 {
-                    var readResult = _client.Repositories.RelativityApplication.ReadSingle(artifactGuid);
-
+                    this.UnlockApplicationsInWorkspace(workspaceId);
                 }
-                catch (Exception e)
-                {
-                    if (!e.Message.Contains("Cannot find a canonical field"))
-                    {
-                        continue;
-                    }
-                }
-                this.UnlockApplicationsInWorkspace(workspaceId);
             }
         }
 
         private void UnlockApplicationsInWorkspace(int workspaceId)
         {
-            var result = _client.Repositories.RDO.Query(new Query<RDO>
+            var applications = _appRepo.GetApplicationsToUnlock(workspaceId);
+            foreach (var artifact in applications)
             {
-                ArtifactTypeGuid = Guid.Parse(ObjectTypeGuids.UnlockApplication),
-                Fields = FieldValue.AllFields,
-                //Condition = new BooleanCondition(RelativityApplicationFieldNames.Locked, BooleanConditionEnum.EqualTo, true)
-            });
-            if (!result.Success)
-            {
-                throw new ApplicationException(result.Message);
-            }
-            foreach (var artifact in result.Results)
-            {
-                var a = new UnlockApplication();
-                a.RDO = artifact.Artifact;
-                var app = _client.Repositories.RelativityApplication.ReadSingle(Guid.Parse(a.ApplicationGuid));
-                if (app.Locked.GetValueOrDefault(true))
-                {
-                    var dbContext = _helper.GetDBContext(workspaceId);
-                    //can't use the RSAPI to update locked app, who knew
-                    dbContext.ExecuteNonQuerySQLStatement($"Update [RelativityApplication] set locked = 0 where ArtifactId = {app.ArtifactID}");
-                }
+                _appRepo.UnlockApplication(workspaceId, artifact);
             }
         }
 
-        private IEnumerable<int> GetWorkspaceIds()
-        {
-            var queryResult = _client.Repositories.Workspace.Query(new Query<Workspace>
-            {
-                Fields = FieldValue.NoFields
-            });
-            if (!queryResult.Success)
-            {
-                throw new ApplicationException(queryResult.Message);
-            }
-            return queryResult.Results.Select(x => x.Artifact.ArtifactID).ToList();
-        }
     }
 }
